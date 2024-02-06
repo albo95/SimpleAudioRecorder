@@ -9,12 +9,18 @@ import SwiftUI
 
 struct RecordingLabelView: View {
     var recording: Recording
+    private var audioPlayerManager: AudioPlayerManager //TODO: forse va messa come variabile environment
+    
+    init(recording: Recording) {
+        self.recording = recording
+        self.audioPlayerManager = AudioPlayerManager.shared
+    }
     
     var body: some View {
         HStack {
             Button(action: {
                 recording.isPlaying.toggle()
-                recording.isPlaying ? AudioRecorderManager.shared.startOrResume(url: recording.fileURL, time: recording.pausedTime) : AudioRecorderManager.shared.pausePlaying()
+                recording.isPlaying ? audioPlayerManager.startPlaying(url: recording.fileURL) : audioPlayerManager.stopPlaying()
             }, label: {
                 Image(systemName: recording.isPlaying ? "pause.fill" : "play.fill")
                     .foregroundStyle(.red)

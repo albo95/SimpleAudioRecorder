@@ -13,7 +13,8 @@ struct RecordingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var recordings: [Recording]
     @State private var isRecording: Bool = false
-    var recordingManager: AudioRecorderManager = AudioRecorderManager.shared
+    var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
+    var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
     @State private var isPlaying: [Bool] = []
     
@@ -21,12 +22,15 @@ struct RecordingsView: View {
         NavigationStack {
             ZStack {
                 if hasMicrophoneAccess {
-                    VStack(alignment: .leading, spacing: 20){
-                        ForEach(recordingManager.recordingsList, id: \.fileURL) {
-                            recording in
-                            RecordingLabelView(recording: recording)
+                    ScrollView {
+                        
+                        VStack(alignment: .leading, spacing: 20){
+                            ForEach(recordingsDataManager.allRecordings, id: \.fileURL) {
+                                recording in
+                                RecordingLabelView(recording: recording)
+                            }
+                            Spacer()
                         }
-                        Spacer()
                     }.padding(.top, 20)
                 } else {
                     Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
@@ -39,34 +43,17 @@ struct RecordingsView: View {
                     Spacer()
                     RecordingSlider()
                     RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
-                        isRecording ? recordingManager.stopRecording() : recordingManager.startRecording()
+                        isRecording ? audioRecorderManager.stopRecording() : audioRecorderManager.startRecording()
                     })
                     .padding(20)
                 }
             }
             .navigationTitle("Recordings")
         }.onAppear {
-            recordingManager.checkMicrophonePermission{ granted in
+            audioRecorderManager.checkMicrophonePermission{ granted in
                 hasMicrophoneAccess = granted
             }
-            recordingManager.setUp()
         }
-    }
-    
-    
-    private func addItem() {
-//        withAnimation {
-//            let newItem = Item(timestamp: Date())
-//            modelContext.insert(newItem)
-//        }
-    }
-    
-    private func deleteItems(offsets: IndexSet) {
-//        withAnimation {
-//            for index in offsets {
-//                modelContext.delete(items[index])
-//            }
-//        }
     }
 }
 
