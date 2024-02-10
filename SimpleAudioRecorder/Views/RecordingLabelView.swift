@@ -19,15 +19,17 @@ struct RecordingLabelView: View {
     var body: some View {
         HStack {
             Button(action: {
-                recording.isPlaying.toggle()
-                recording.isPlaying ? audioPlayerManager.startPlaying(url: recording.fileURL) : audioPlayerManager.stopPlaying()
+                recording.isPlaying?.toggle()
+                if let isPlaying = recording.isPlaying, let fileURL = recording.fileURL {
+                    isPlaying ? audioPlayerManager.startPlaying(url: fileURL) : audioPlayerManager.stopPlaying()
+                }
             }, label: {
-                Image(systemName: recording.isPlaying ? "pause.fill" : "play.fill")
+                Image(systemName: recording.isPlaying ?? false ? "pause.fill" : "play.fill")
                     .foregroundStyle(.red)
                     .font(.system(size: 26))
                 
             }).padding(.trailing, 20)
-            Text(recording.name)
+            Text(recording.name ?? "")
                 .font(.system(size: 16))
         }
     }

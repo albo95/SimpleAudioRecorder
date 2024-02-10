@@ -11,6 +11,7 @@ import Foundation
 class RecordingsDataManager {
     public static var shared: RecordingsDataManager = RecordingsDataManager()
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
+    private let cloudDataManager: CloudDataManager = CloudDataManager.shared
     var allRecordings: [Recording] = []
     
     
@@ -23,12 +24,17 @@ class RecordingsDataManager {
 
     func addToRecordings(_ newRecording: Recording) {
         allRecordings.append(newRecording)
+        cloudDataManager.saveRecordToCloud(newRecording)
         sortRecordingListByDate()
     }
     
     private func sortRecordingListByDate() {
-        allRecordings.sort(by: { $0.dateOfRecording.compare($1.dateOfRecording) == .orderedDescending})
+        allRecordings.sort(by: {
+            ($0.dateOfRecording ?? Date.distantPast) > ($1.dateOfRecording ?? Date.distantPast)
+        })
     }
+
+
     
     func resetRecordings() {
         allRecordings.forEach({$0.reset()})

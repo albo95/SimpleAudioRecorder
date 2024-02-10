@@ -15,6 +15,8 @@
 		6272356C2B63BEF50055E0CB /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6272356B2B63BEF50055E0CB /* AudioPlayerManager.swift */; };
 		6272356E2B63C2F20055E0CB /* RecordingsDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6272356D2B63C2F20055E0CB /* RecordingsDataManager.swift */; };
 		627235702B63C5A50055E0CB /* AudioRecorderHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6272356F2B63C5A50055E0CB /* AudioRecorderHelper.swift */; };
+		627D7CC12B776B060043D550 /* MyLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627D7CC02B776B060043D550 /* MyLogger.swift */; };
+		62A06AC42B738A1100EDCBF3 /* CloudDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A06AC32B738A1100EDCBF3 /* CloudDataManager.swift */; };
 		62E4F6462B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4F6452B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift */; };
 		62E4F6482B5BDAB3001F1FC9 /* RecordingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4F6472B5BDAB3001F1FC9 /* RecordingsView.swift */; };
 		62E4F64C2B5BDAB4001F1FC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62E4F64B2B5BDAB4001F1FC9 /* Assets.xcassets */; };
@@ -33,6 +35,8 @@
 		6272356B2B63BEF50055E0CB /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		6272356D2B63C2F20055E0CB /* RecordingsDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsDataManager.swift; sourceTree = "<group>"; };
 		6272356F2B63C5A50055E0CB /* AudioRecorderHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderHelper.swift; sourceTree = "<group>"; };
+		627D7CC02B776B060043D550 /* MyLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLogger.swift; sourceTree = "<group>"; };
+		62A06AC32B738A1100EDCBF3 /* CloudDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudDataManager.swift; sourceTree = "<group>"; };
 		62E4F6422B5BDAB3001F1FC9 /* SimpleAudioRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleAudioRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E4F6452B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAudioRecorderApp.swift; sourceTree = "<group>"; };
 		62E4F6472B5BDAB3001F1FC9 /* RecordingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsView.swift; sourceTree = "<group>"; };
@@ -89,6 +93,7 @@
 			children = (
 				627235722B63D1570055E0CB /* AudioRecorderManager */,
 				6272356D2B63C2F20055E0CB /* RecordingsDataManager.swift */,
+				62A06AC32B738A1100EDCBF3 /* CloudDataManager.swift */,
 				6272356B2B63BEF50055E0CB /* AudioPlayerManager.swift */,
 				620CDE262B61738C0005F03E /* ModelContainerDataManager.swift */,
 			);
@@ -104,9 +109,18 @@
 			path = AudioRecorderManager;
 			sourceTree = "<group>";
 		};
+		627D7CC22B776B0D0043D550 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				627D7CC02B776B060043D550 /* MyLogger.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		62E4F6392B5BDAB3001F1FC9 = {
 			isa = PBXGroup;
 			children = (
+				627D7CC22B776B0D0043D550 /* Utils */,
 				620CDE252B6157D70005F03E /* Extensions */,
 				62E4F6442B5BDAB3001F1FC9 /* SimpleAudioRecorder */,
 				62E4F6432B5BDAB3001F1FC9 /* Products */,
@@ -221,8 +235,10 @@
 				627235702B63C5A50055E0CB /* AudioRecorderHelper.swift in Sources */,
 				62E4F6482B5BDAB3001F1FC9 /* RecordingsView.swift in Sources */,
 				620CDE242B6157CD0005F03E /* TimeIntervalExtension.swift in Sources */,
+				62A06AC42B738A1100EDCBF3 /* CloudDataManager.swift in Sources */,
 				62E4F6462B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift in Sources */,
 				6272356E2B63C2F20055E0CB /* RecordingsDataManager.swift in Sources */,
+				627D7CC12B776B060043D550 /* MyLogger.swift in Sources */,
 				6272356C2B63BEF50055E0CB /* AudioPlayerManager.swift in Sources */,
 				62E4F65A2B602C5B001F1FC9 /* Recording.swift in Sources */,
 				620CDE202B614C4B0005F03E /* RecordingLabelView.swift in Sources */,

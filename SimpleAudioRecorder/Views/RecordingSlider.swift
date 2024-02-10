@@ -9,12 +9,13 @@ import SwiftUI
 import AVFoundation
 
 struct RecordingSlider: View {
-    var audioPlayerManager: AudioPlayerManager = AudioPlayerManager.shared
     @State private var percentage: CGFloat = 0
     @State private var cursorPos: CGFloat = 0
+    @State private var audioPlayerWasPausedBeforeMovingCursor: Bool = false
+    @State private var userJustMovedTheCursor: Bool = false
+    private var audioPlayerManager: AudioPlayerManager = AudioPlayerManager.shared
     private var width: CGFloat = 280
     private var height: CGFloat = 12
-    @State private var userJustMovedTheCursor: Bool = false
     private var actualPos: CGFloat {
         cursorPos - width/2
     }
@@ -28,8 +29,6 @@ struct RecordingSlider: View {
         audioPlayerManager.currentPlayingRecordDuration * (1 - percentage/100)
     }
     
-    
-    @State private var audioPlayerWasPausedBeforeMovingCursor: Bool = false
     
     var body: some View {
         VStack {

@@ -10,11 +10,11 @@ import SwiftData
 
 @Model
 class Recording {
-    var fileURL: URL
-    var name: String
-    var dateOfRecording: Date
-    var isPlaying: Bool
-    var duration: Double
+    var fileURL: URL?
+    var name: String?
+    var dateOfRecording: Date?
+    var isPlaying: Bool?
+    var duration: Double?
     var pausedTime: Double?
     
     init(fileURL: URL, dateOfRecording: Date, isPlaying: Bool = false, duration: Double = 0, currentSec: Double = 0) {

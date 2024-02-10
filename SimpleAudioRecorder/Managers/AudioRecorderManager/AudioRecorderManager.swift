@@ -16,7 +16,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private var audioRecorder : AVAudioRecorder?
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
     private let recordingsDataManager : RecordingsDataManager = RecordingsDataManager.shared
-    private var newRecording: Recording?    
+    private var newRecording: Recording?
 
     func startRecording() {
         do {
