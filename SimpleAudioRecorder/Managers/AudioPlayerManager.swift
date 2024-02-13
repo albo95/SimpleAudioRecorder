@@ -16,6 +16,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     private var allRecordings: [Recording] = RecordingsDataManager.shared.allRecordings
     private var audioPlayer : AVAudioPlayer?
     private var playTimer: Timer?
+    private var logger: MyLogger = MyLogger.shared
+    
     var elapsedTime: TimeInterval = 0
     var isPlaying: Bool {
         if let isPlaying = currentlyPlayingRecording?.isPlaying {
@@ -53,6 +55,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         do {
             try playSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch {
+            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
             print("Playing failed in Device")
         }
         

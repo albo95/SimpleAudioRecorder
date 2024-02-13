@@ -17,11 +17,14 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
     private let recordingsDataManager : RecordingsDataManager = RecordingsDataManager.shared
     private var newRecording: Recording?
+    
+    private var logger: MyLogger = MyLogger.shared
 
     func startRecording() {
         do {
             try setUpAudioSession()
         } catch {
+            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
             print("Can not setup the Audio Aession")
         }
         
@@ -37,6 +40,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
             newRecording = Recording(fileURL: url, dateOfRecording: date)
         } catch {
             newRecording = nil
+            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
             print("Can not setup the Audio Recorder")
         }
     }
@@ -48,6 +52,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
             recordingsDataManager.addToRecordings(newRecording)
             self.newRecording = nil
         } else {
+            logger.addLog(MyLog(log: "newRec: \(String(describing: self.newRecording)), duration: \(String(describing: audioRecorder?.currentTime))", type: .completed))
             print("newRec: \(String(describing: self.newRecording)), duration: \(String(describing: audioRecorder?.currentTime))")
         }
     }

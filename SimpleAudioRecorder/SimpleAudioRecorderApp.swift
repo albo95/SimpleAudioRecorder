@@ -25,7 +25,10 @@ struct SimpleAudioRecorderApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RecordingsView()
+            ZStack {
+                RecordingsView()
+                MyLoggerView()
+            }
         }
         .modelContainer(sharedModelContainer)
     }

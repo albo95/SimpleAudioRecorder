@@ -9,6 +9,7 @@ import Foundation
 import AVFoundation
 
 class AudioRecorderHelper {
+    private var logger: MyLogger = MyLogger.shared
     
     func getNewRecordingFileURL(recordingNumber: Int, recordingDate: Date) -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -33,6 +34,7 @@ class AudioRecorderHelper {
             let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
             return attributes[.creationDate] as? Date
         } catch {
+            logger.addLog(MyLog(log: "An error occurred when trying to get the file creation date: \(error.localizedDescription)", type: .error))
             print("An error occurred when trying to get the file creation date: \(error.localizedDescription)")
             return nil
         }

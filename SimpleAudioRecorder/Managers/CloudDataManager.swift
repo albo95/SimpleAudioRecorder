@@ -10,6 +10,7 @@ import CloudKit
 
 class CloudDataManager {
     static let shared: CloudDataManager = CloudDataManager()
+    private var logger: MyLogger = MyLogger.shared
     private init() {}
     
     func saveRecordToCloud(_ audioRecord: Recording) {
@@ -23,15 +24,17 @@ class CloudDataManager {
             let ckRecordAsset = CKAsset(fileURL: audioRecordFileUrl)
             ckRecord["audio"] = ckRecordAsset
             
-            CKContainer.default().publicCloudDatabase.save(ckRecord) { record, error in
+            CKContainer.default().publicCloudDatabase.save(ckRecord) { [weak self] record, error in
                 DispatchQueue.main.async {
                     if let error = error {
+                        self?.logger.addLog(MyLog(log: "Error on uploading to iCloud: \(error.localizedDescription) ", type: .error))
                         print("Error on uploading to iCloud: \(error.localizedDescription) ")
                         //self.status.text = "Error: \(error.localizedDescription)"
                         //self.spinner.stopAnimating()
                     } else {
                         //self.status.text = "Done!"
                         //self.spinner.stopAnimating()
+                        self?.logger.addLog(MyLog(log: "Uploaded on iCloud!", type: .completed))
                         print("Uploaded on iCloud!")
                     }
                 }
@@ -51,7 +54,7 @@ class CloudDataManager {
         
         var records = [Recording]()
         
-        operation.recordMatchedBlock = { recordID, recordResult in
+        operation.recordMatchedBlock = { [weak self] recordID, recordResult in
             switch recordResult {
             case .success(let ckRecord):
                 let record = Recording.emptyRecording
@@ -59,6 +62,7 @@ class CloudDataManager {
                 records.append(record)
             case .failure(_):
                 //TODO: aggiungere gestione fallimento
+                self?.logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
                 print("load record fallita")
             }
             
