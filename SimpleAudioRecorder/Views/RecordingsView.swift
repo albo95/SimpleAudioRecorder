@@ -13,7 +13,7 @@ struct RecordingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var recordings: [Recording]
     @State private var isRecording: Bool = false
-    var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
+    //var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
     var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
     @State private var isPlaying: [Bool] = []
@@ -23,9 +23,8 @@ struct RecordingsView: View {
             ZStack {
                 if hasMicrophoneAccess {
                     ScrollView {
-                        
                         VStack(alignment: .leading, spacing: 20){
-                            ForEach(recordingsDataManager.allRecordings, id: \.fileURL) {
+                            ForEach(recordings, id: \.fileURL) {
                                 recording in
                                 RecordingLabelView(recording: recording)
                             }
@@ -43,7 +42,7 @@ struct RecordingsView: View {
                     Spacer()
                     RecordingSlider()
                     RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
-                        isRecording ? audioRecorderManager.stopRecording() : audioRecorderManager.startRecording()
+                        isRecording ? stopRecording() : startRecording()
                     })
                     .padding(20)
                 }
@@ -54,6 +53,21 @@ struct RecordingsView: View {
                 hasMicrophoneAccess = granted
             }
         }
+    }
+    
+    private func stopRecording() {
+        if let newRecording = audioRecorderManager.stopRecording() {
+            saveRecording(newRecording)
+        }
+    }
+    
+    private func saveRecording(_ newRecording: Recording) {
+        modelContext.insert(newRecording)
+        try! modelContext.save()
+    }
+    
+    private func startRecording() {
+        audioRecorderManager.startRecording()
     }
 }
 

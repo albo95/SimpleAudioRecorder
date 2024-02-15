@@ -12,7 +12,7 @@ import AVFAudio
 class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     public static var shared: AudioPlayerManager = AudioPlayerManager()
     override private init() {}
-    private var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
+    //private var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
     private var allRecordings: [Recording] = RecordingsDataManager.shared.allRecordings
     private var audioPlayer : AVAudioPlayer?
     private var playTimer: Timer?
@@ -51,12 +51,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     
     func startPlaying(url : URL, time: Double? = nil) {
         let playSession = AVAudioSession.sharedInstance()
-        
         do {
             try playSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch {
-            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
-            print("Playing failed in Device")
+            logger.addLog(MyLog(log: "Playing failed in Device", type: .error))
         }
         
         audioPlayer = try? AVAudioPlayer(contentsOf : url)
@@ -90,7 +88,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         if currentlyPlayingRecording != nil {
             audioPlayer?.currentTime = time
             audioPlayer?.play()
-            recordingsDataManager.resetRecordings()
+            //recordingsDataManager.resetRecordings()
             currentlyPlayingRecording?.isPlaying = true
             startTimer()
         }
@@ -131,13 +129,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
     
     private func setCurrentPlayingRecord(recordingUrl: URL) {
-        recordingsDataManager.resetRecordings()
+       // recordingsDataManager.resetRecordings()
         currentlyPlayingRecording = allRecordings.first(where: { $0.fileURL == recordingUrl })
         currentlyPlayingRecording?.isPlaying = true
     }
     
     private func unsetCurrentPlayingRecord() {
         currentlyPlayingRecording = nil
-        recordingsDataManager.resetRecordings()
+        //recordingsDataManager.resetRecordings()
     }
 }

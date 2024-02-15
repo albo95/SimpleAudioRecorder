@@ -15,6 +15,7 @@ class AudioRecorderHelper {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let fileName = "Record \(recordingNumber) - \(recordingDate.formattedString()).m4a"
         let fileURL = path.appendingPathComponent(fileName)
+        logger.addLog(fileURL.absoluteString)
         return fileURL
     }
     
@@ -35,7 +36,6 @@ class AudioRecorderHelper {
             return attributes[.creationDate] as? Date
         } catch {
             logger.addLog(MyLog(log: "An error occurred when trying to get the file creation date: \(error.localizedDescription)", type: .error))
-            print("An error occurred when trying to get the file creation date: \(error.localizedDescription)")
             return nil
         }
     }

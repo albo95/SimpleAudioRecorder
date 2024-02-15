@@ -11,11 +11,13 @@ import SwiftData
 @Model
 class Recording {
     var fileURL: URL?
-    var name: String?
+    var name: String = ""
     var dateOfRecording: Date?
-    var isPlaying: Bool?
+    var isPlaying: Bool = false
     var duration: Double?
     var pausedTime: Double?
+    @Attribute(.externalStorage)
+    var audioData: Data?
     
     init(fileURL: URL, dateOfRecording: Date, isPlaying: Bool = false, duration: Double = 0, currentSec: Double = 0) {
         self.fileURL = fileURL

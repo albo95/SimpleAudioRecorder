@@ -18,13 +18,17 @@ class MyLogger {
     var thirdLog: MyLog?
     var fourthLog: MyLog?
     
+    func addLog(_ log: String, _ logType: LogType = .none) {
+        addLog(MyLog(log: log, type: logType))
+    }
+    
     func addLog(_ newLog: MyLog) {
         logs.insert(newLog, at: 0)
         if logs.count > 4 {
             logs.removeLast()
         }
         updateLogs()
-        
+        print("\(newLog.log)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             self.removeLog(newLog)
         }

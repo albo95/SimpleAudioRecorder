@@ -15,7 +15,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private let audioSession: AVAudioSession = AVAudioSession.sharedInstance()
     private var audioRecorder : AVAudioRecorder?
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
-    private let recordingsDataManager : RecordingsDataManager = RecordingsDataManager.shared
+    //private let recordingsDataManager : RecordingsDataManager = RecordingsDataManager.shared
     private var newRecording: Recording?
     
     private var logger: MyLogger = MyLogger.shared
@@ -24,13 +24,12 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
         do {
             try setUpAudioSession()
         } catch {
-            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
-            print("Can not setup the Audio Aession")
+            logger.addLog(MyLog(log: "Can not setup the Audio Session", type: .error))
         }
         
         do {
             let date = Date.now
-            let url = audioRecorderHelper.getNewRecordingFileURL(recordingNumber: recordingsDataManager.allRecordings.count + 1, recordingDate: date)
+            let url = audioRecorderHelper.getNewRecordingFileURL(recordingNumber: 0, recordingDate: date)
             audioRecorder = try AVAudioRecorder(
                 url: url,
                 settings: audioRecorderHelper.getAudioRecorderSettings()
@@ -40,20 +39,21 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
             newRecording = Recording(fileURL: url, dateOfRecording: date)
         } catch {
             newRecording = nil
-            logger.addLog(MyLog(log: "Can not setup the Audio Aession", type: .error))
-            print("Can not setup the Audio Recorder")
+            logger.addLog(MyLog(log: "Can not setup the Audio Recorder", type: .error))
         }
     }
     
-    func stopRecording() {
-        if let newRecording = self.newRecording, let duration =  audioRecorder?.currentTime {
+    func stopRecording() -> Recording? {
+        if let newRecording = self.newRecording, let duration =  audioRecorder?.currentTime, let fileURL = self.newRecording?.fileURL {
             newRecording.duration = duration
             audioRecorder?.stop()
-            recordingsDataManager.addToRecordings(newRecording)
+            newRecording.audioData = try? Data(contentsOf: fileURL)
+            //recordingsDataManager.addToRecordings(newRecording)
             self.newRecording = nil
+            return newRecording
         } else {
             logger.addLog(MyLog(log: "newRec: \(String(describing: self.newRecording)), duration: \(String(describing: audioRecorder?.currentTime))", type: .completed))
-            print("newRec: \(String(describing: self.newRecording)), duration: \(String(describing: audioRecorder?.currentTime))")
+            return nil
         }
     }
     
@@ -79,3 +79,4 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
         }
     }
 }
+
