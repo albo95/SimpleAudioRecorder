@@ -9,26 +9,30 @@ import SwiftUI
 import AVFoundation
 
 struct RecordingSlider: View {
+    var recording: Recording
     @State private var percentage: CGFloat = 0
     @State private var cursorPos: CGFloat = 0
-    @State private var audioPlayerWasPausedBeforeMovingCursor: Bool = false
+    @State private var audioPlayerWasPlayingBeforeMovingCursor: Bool = false
     @State private var userJustMovedTheCursor: Bool = false
     private var audioPlayerManager: AudioPlayerManager = AudioPlayerManager.shared
-    private var width: CGFloat = 280
-    private var height: CGFloat = 12
+    private var width: CGFloat = 230
+    private var height: CGFloat = 8
     private var actualPos: CGFloat {
         cursorPos - width/2
     }
-    private var hide: CGFloat {
-        audioPlayerManager.isActive ? 1 : 0
-    }
     private var elapsedTimeFromPercentage: TimeInterval {
-        audioPlayerManager.currentPlayingRecordDuration * percentage/100
+        recording.duration * percentage/100
     }
     private var timeToEndFromPercentage: TimeInterval {
-        audioPlayerManager.currentPlayingRecordDuration * (1 - percentage/100)
+        recording.duration * (1 - percentage/100)
+    }
+    private var step: TimeInterval {
+        100/recording.duration
     }
     
+    init(_ recording: Recording){
+        self.recording = recording
+    }
     
     var body: some View {
         VStack {
@@ -40,17 +44,17 @@ struct RecordingSlider: View {
                     .gesture(DragGesture(minimumDistance: 0)
                         .onChanged {
                             value in
-                            if audioPlayerManager.isPlaying == true {                              audioPlayerWasPausedBeforeMovingCursor = true
+                            if recording.isPlaying == true {
+                                audioPlayerWasPlayingBeforeMovingCursor = true
                                 audioPlayerManager.pausePlaying()
                             }
                             updatePercentageFromGesture(tapLocation: value.location.x)
                         }.onEnded {_ in
-                            if audioPlayerWasPausedBeforeMovingCursor {
-                                audioPlayerManager.resumePlayingAtTime(elapsedTimeFromPercentage)
+                            if audioPlayerWasPlayingBeforeMovingCursor, recording.isPlaying == true {
+                                audioPlayerManager.play(recording, at: elapsedTimeFromPercentage)
                             } else {
-                                audioPlayerManager.setCurrentTime(elapsedTimeFromPercentage)
+                                recording.elapsedTime = elapsedTimeFromPercentage
                             }
-                            userJustMovedTheCursor = true
                         }
                     )
                 Circle()
@@ -66,18 +70,20 @@ struct RecordingSlider: View {
                     .padding(.leading, width/3)
             }
         }
-        .opacity(hide)
-        .onChange(of: audioPlayerManager.elapsedTime) { elapsedTime, _ in
-            if audioPlayerManager.isPlaying, let duration = audioPlayerManager.currentlyPlayingRecording?.duration, duration > 0 {
-                if userJustMovedTheCursor {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        userJustMovedTheCursor = false
-                    }
-                } else {
-                    percentage = (elapsedTime / duration) * 100
-                }
-            }
+        .onChange(of: recording.elapsedTime) { elapsedTime, _ in
+                updateSlider()
         }
+    }
+    
+    private func updateSlider() {
+            //                if userJustMovedTheCursor {
+            //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            //                        userJustMovedTheCursor = false
+            //                    }
+            //                } else {
+            percentage = (recording.elapsedTime / recording.duration) * 100
+            // }
+
     }
     
     private func updatePercentageFromGesture(tapLocation: CGFloat) {
@@ -90,5 +96,5 @@ struct RecordingSlider: View {
 }
 
 #Preview {
-    RecordingSlider()
+    RecordingSlider(Recording.emptyRecording)
 }

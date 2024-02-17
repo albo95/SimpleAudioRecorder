@@ -15,7 +15,6 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private let audioSession: AVAudioSession = AVAudioSession.sharedInstance()
     private var audioRecorder : AVAudioRecorder?
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
-    //private let recordingsDataManager : RecordingsDataManager = RecordingsDataManager.shared
     private var newRecording: Recording?
     
     private var logger: MyLogger = MyLogger.shared

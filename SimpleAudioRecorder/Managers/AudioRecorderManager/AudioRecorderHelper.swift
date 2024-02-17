@@ -15,7 +15,6 @@ class AudioRecorderHelper {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let fileName = "Record \(recordingNumber) - \(recordingDate.formattedString()).m4a"
         let fileURL = path.appendingPathComponent(fileName)
-        logger.addLog(fileURL.absoluteString)
         return fileURL
     }
     

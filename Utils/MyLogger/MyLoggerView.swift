@@ -49,7 +49,7 @@ struct MyLoggerView: View {
             .padding()
             .background(Color.gray.opacity(0.8))
             .cornerRadius(10)
-            .padding(.top, 50)
+            .padding(.top, 20)
             .opacity(showLogger ? 1 : 0)
             
             Spacer()

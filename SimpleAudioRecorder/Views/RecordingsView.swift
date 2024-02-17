@@ -20,55 +20,55 @@ struct RecordingsView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            VStack {
                 if hasMicrophoneAccess {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20){
-                            ForEach(recordings, id: \.fileURL) {
-                                recording in
-                                RecordingLabelView(recording: recording)
-                            }
-                            Spacer()
+                    List{
+                        ForEach(recordings, id: \.dateOfRecording) {
+                            recording in
+                            RecordingLabelView(recording: recording)
                         }
-                    }.padding(.top, 20)
+                        .onDelete(perform: deleteRecording)
+                    }.padding(.vertical, 10)
                 } else {
                     Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
                         .frame(width: 250)
                         .foregroundStyle(.gray)
                         .font(.system(size: 22))
                 }
-                
-                VStack {
-                    Spacer()
-                    RecordingSlider()
-                    RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
-                        isRecording ? stopRecording() : startRecording()
-                    })
-                    .padding(20)
-                }
+                RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
+                    isRecording ? stopRecording() : startRecording()
+                })
             }
-            .navigationTitle("Recordings")
-        }.onAppear {
-            audioRecorderManager.checkMicrophonePermission{ granted in
-                hasMicrophoneAccess = granted
-            }
+        .navigationTitle("Recordings")
+    }.onAppear {
+        audioRecorderManager.checkMicrophonePermission{ granted in
+            hasMicrophoneAccess = granted
         }
     }
-    
-    private func stopRecording() {
-        if let newRecording = audioRecorderManager.stopRecording() {
-            saveRecording(newRecording)
-        }
-    }
-    
-    private func saveRecording(_ newRecording: Recording) {
-        modelContext.insert(newRecording)
+}
+
+func deleteRecording(at offsets: IndexSet) {
+    for index in offsets {
+        modelContext.delete(recordings[index])
         try! modelContext.save()
     }
-    
-    private func startRecording() {
-        audioRecorderManager.startRecording()
+}
+
+
+private func stopRecording() {
+    if let newRecording = audioRecorderManager.stopRecording() {
+        saveRecording(newRecording)
     }
+}
+
+private func saveRecording(_ newRecording: Recording) {
+    modelContext.insert(newRecording)
+    try! modelContext.save()
+}
+
+private func startRecording() {
+    audioRecorderManager.startRecording()
+}
 }
 
 #Preview {
