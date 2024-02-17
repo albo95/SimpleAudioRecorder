@@ -11,20 +11,17 @@ import Foundation
 class RecordingsDataManager {
     public static var shared: RecordingsDataManager = RecordingsDataManager()
     private let audioRecorderHelper: AudioRecorderHelper = AudioRecorderHelper()
-    //private let cloudDataManager: CloudDataManager = CloudDataManager.shared
     var allRecordings: [Recording] = []
     
     
     private init() {
         //TODO: AGGIUNGERE FUNZIONI PER I DATI DA ICLOUD ECC
-        //fetchRecordngsDataFromFileManager()
         resetRecordings()
         sortRecordingListByDate()
     }
 
     func addToRecordings(_ newRecording: Recording) {
         allRecordings.append(newRecording)
-       // cloudDataManager.saveRecordToCloud(newRecording)
         sortRecordingListByDate()
     }
     

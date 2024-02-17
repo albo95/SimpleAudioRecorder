@@ -28,7 +28,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
         
         do {
             let date = Date.now
-            let url = audioRecorderHelper.getNewRecordingFileURL(recordingNumber: 0, recordingDate: date)
+            let url = audioRecorderHelper.getNewRecordingFileURL(recordingDate: date)
             audioRecorder = try AVAudioRecorder(
                 url: url,
                 settings: audioRecorderHelper.getAudioRecorderSettings()

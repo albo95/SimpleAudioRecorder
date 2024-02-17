@@ -91,7 +91,7 @@ final class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         do {
             try playSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch {
-            
+            //TODO: capire che fare qui
         }
         
         audioPlayer = try? AVAudioPlayer(contentsOf : url)

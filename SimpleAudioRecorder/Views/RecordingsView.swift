@@ -13,10 +13,10 @@ struct RecordingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var recordings: [Recording]
     @State private var isRecording: Bool = false
-    //var recordingsDataManager: RecordingsDataManager = RecordingsDataManager.shared
     var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
     @State private var isPlaying: [Bool] = []
+    private var logger: MyLogger = MyLogger.shared
     
     var body: some View {
         NavigationStack {
@@ -35,40 +35,43 @@ struct RecordingsView: View {
                         .foregroundStyle(.gray)
                         .font(.system(size: 22))
                 }
-                RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
-                    isRecording ? stopRecording() : startRecording()
-                })
+                VStack {
+                    Spacer()
+                    RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
+                        isRecording ? stopRecording() : startRecording()
+                    })
+                }
             }
-        .navigationTitle("Recordings")
-    }.onAppear {
-        audioRecorderManager.checkMicrophonePermission{ granted in
-            hasMicrophoneAccess = granted
+            .navigationTitle("Recordings")
+        }.onAppear {
+            audioRecorderManager.checkMicrophonePermission{ granted in
+                hasMicrophoneAccess = granted
+            }
         }
     }
-}
-
-func deleteRecording(at offsets: IndexSet) {
-    for index in offsets {
-        modelContext.delete(recordings[index])
+    
+    func deleteRecording(at offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(recordings[index])
+            try! modelContext.save()
+        }
+    }
+    
+    
+    private func stopRecording() {
+        if let newRecording = audioRecorderManager.stopRecording() {
+            saveRecording(newRecording)
+        }
+    }
+    
+    private func saveRecording(_ newRecording: Recording) {
+        modelContext.insert(newRecording)
         try! modelContext.save()
     }
-}
-
-
-private func stopRecording() {
-    if let newRecording = audioRecorderManager.stopRecording() {
-        saveRecording(newRecording)
+    
+    private func startRecording() {
+        audioRecorderManager.startRecording()
     }
-}
-
-private func saveRecording(_ newRecording: Recording) {
-    modelContext.insert(newRecording)
-    try! modelContext.save()
-}
-
-private func startRecording() {
-    audioRecorderManager.startRecording()
-}
 }
 
 #Preview {

@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct SimpleAudioRecorderApp: App {
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Recording.self,
@@ -22,12 +23,13 @@ struct SimpleAudioRecorderApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-
+    
     var body: some Scene {
         WindowGroup {
             ZStack {
                 RecordingsView()
                 MyLoggerView()
+                NetworkMonitorView()
             }
         }
         .modelContainer(sharedModelContainer)

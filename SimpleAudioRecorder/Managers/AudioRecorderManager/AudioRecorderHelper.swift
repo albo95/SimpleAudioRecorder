@@ -11,9 +11,9 @@ import AVFoundation
 class AudioRecorderHelper {
     private var logger: MyLogger = MyLogger.shared
     
-    func getNewRecordingFileURL(recordingNumber: Int, recordingDate: Date) -> URL {
+    func getNewRecordingFileURL(recordingDate: Date) -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileName = "Record \(recordingNumber) - \(recordingDate.formattedString()).m4a"
+        let fileName = "Record - \(recordingDate.formattedString()).m4a"
         let fileURL = path.appendingPathComponent(fileName)
         return fileURL
     }

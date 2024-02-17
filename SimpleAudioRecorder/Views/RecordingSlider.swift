@@ -73,25 +73,17 @@ struct RecordingSlider: View {
         .onChange(of: recording.elapsedTime) { elapsedTime, _ in
                 updateSlider()
         }
+        .onAppear(){
+            updateSlider()
+        }
     }
     
     private func updateSlider() {
-            //                if userJustMovedTheCursor {
-            //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            //                        userJustMovedTheCursor = false
-            //                    }
-            //                } else {
             percentage = (recording.elapsedTime / recording.duration) * 100
-            // }
-
     }
     
     private func updatePercentageFromGesture(tapLocation: CGFloat) {
         percentage = CGFloat(min(max(0, Float(tapLocation / width * 100)), 100))
-    }
-    
-    private func getCircleXPos() {
-        
     }
 }
 
