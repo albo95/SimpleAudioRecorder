@@ -36,7 +36,7 @@ struct RecordingsView: View {
                         .font(.system(size: 22))
                 }
                 VStack {
-                    Spacer()
+                    if recordings.isEmpty { Spacer() }
                     RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
                         isRecording ? stopRecording() : startRecording()
                     })
