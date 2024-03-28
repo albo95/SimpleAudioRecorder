@@ -65,8 +65,10 @@ struct RecordingSlider: View {
             }
             HStack {
                 Text("\(elapsedTimeFromPercentage.toMinutesSeconds())")
+                    .frame(width: 50, height: 20)
                     .padding(.trailing, width/3)
                 Text("-\(timeToEndFromPercentage.toMinutesSeconds())")
+                    .frame(width: 50, height: 20)
                     .padding(.leading, width/3)
             }
         }
