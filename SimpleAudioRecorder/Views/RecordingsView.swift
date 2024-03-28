@@ -22,13 +22,14 @@ struct RecordingsView: View {
         NavigationStack {
             ZStack {
                 if hasMicrophoneAccess {
-                    List{
-                        ForEach(recordings, id: \.dateOfRecording) {
-                            recording in
-                            RecordingLabelView(recording: recording)
-                                .padding(.vertical, 8)
+                    VStack {
+                        ScrollView {
+                            ForEach(recordings, id: \.dateOfRecording) {
+                                recording in
+                                RecordingLabelView(recording: recording)
+                                    .padding(.vertical, 8)
+                            }.padding(.horizontal, 20)
                         }
-                        .onDelete(perform: deleteRecording)
                     }
                 } else {
                     Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
@@ -60,11 +61,9 @@ struct RecordingsView: View {
         }
     }
     
-    private func deleteRecording(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(recordings[index])
-            try! modelContext.save()
-        }
+    private func deleteRecording(_ recording: Recording) {
+        modelContext.delete(recording)
+        try! modelContext.save()
     }
     
     private func stopRecording() {

@@ -15,7 +15,7 @@ struct RecordingSlider: View {
     @State private var audioPlayerWasPlayingBeforeMovingCursor: Bool = false
     @State private var userJustMovedTheCursor: Bool = false
     private var audioPlayerManager: AudioPlayerManager = AudioPlayerManager.shared
-    private var width: CGFloat = 230
+    private var width: CGFloat = 180
     private var height: CGFloat = 8
     private var actualPos: CGFloat {
         cursorPos - width/2
@@ -64,14 +64,16 @@ struct RecordingSlider: View {
                     .allowsHitTesting(false)
             }
             HStack {
-                Text("\(elapsedTimeFromPercentage.toMinutesSeconds())")
-                    .padding(.trailing, width/3)
-                Text("-\(timeToEndFromPercentage.toMinutesSeconds())")
-                    .padding(.leading, width/3)
+                Text("")
+                    .frame(width: 50, height: 20)
+                    .padding(.trailing, width/3 - 20)
+                Text("")
+                    .frame(width: 50, height: 20)
+                    .padding(.leading, width/3 - 20)
             }
         }
         .onChange(of: recording.elapsedTime) { elapsedTime, _ in
-                updateSlider()
+            updateSlider()
         }
         .onAppear(){
             updateSlider()
@@ -79,7 +81,7 @@ struct RecordingSlider: View {
     }
     
     private func updateSlider() {
-            percentage = (recording.elapsedTime / recording.duration) * 100
+        percentage = (recording.elapsedTime / recording.duration) * 100
     }
     
     private func updatePercentageFromGesture(tapLocation: CGFloat) {
