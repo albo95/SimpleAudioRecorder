@@ -18,16 +18,21 @@ struct RecButtonView: View {
                 action()
                 isRecording.toggle()
             }, label: {
-                Image(systemName: isRecording ? "stop.fill" : "circle.fill")
-                    .font(.system(size: 80))
-                    .padding(.vertical, isRecording ? 12 : 0)
+                ZStack {
+                    Circle()
+                        .foregroundStyle(.red)
+                        .frame(height: 70)
+                    Image(systemName: isRecording ? "stop.fill" : "mic.fill")
+                        .font(.system(size: 30))
+                        .foregroundStyle(.white)
+                        .contentTransition(.symbolEffect(.replace))
+                }
             })
-            .disabled(!isEnabed)
-            Text(isRecording ? "Stop" : "Start Recording")
-                .padding(.top, 1)
+            Text(isRecording ? "Stop" : "Rec")
+                .padding(.top, 5)
+                .foregroundStyle(.red)
+                .font(.system(size: 16))
         }
-        
-        .foregroundStyle(.red)
     }
 }
 

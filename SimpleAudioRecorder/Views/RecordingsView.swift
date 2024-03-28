@@ -20,26 +20,36 @@ struct RecordingsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            ZStack {
                 if hasMicrophoneAccess {
                     List{
                         ForEach(recordings, id: \.dateOfRecording) {
                             recording in
                             RecordingLabelView(recording: recording)
+                                .padding(.vertical, 8)
                         }
                         .onDelete(perform: deleteRecording)
-                    }.padding(.vertical, 10)
+                    }
                 } else {
                     Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
                         .frame(width: 250)
                         .foregroundStyle(.gray)
                         .font(.system(size: 22))
                 }
-                VStack {
-                    if recordings.isEmpty { Spacer() }
-                    RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
-                        isRecording ? stopRecording() : startRecording()
-                    })
+                
+                ZStack {
+                    VStack {
+                        Spacer()
+                        Rectangle()
+                            .foregroundStyle(.buttonBackground)
+                            .frame(height: 160)
+                    }.ignoresSafeArea()
+                    VStack {
+                        Spacer()
+                        RecButtonView(isRecording: $isRecording, isEnabed: $hasMicrophoneAccess, action: {
+                            isRecording ? stopRecording() : startRecording()
+                        })
+                    }
                 }
             }
             .navigationTitle("Recordings")
@@ -50,13 +60,12 @@ struct RecordingsView: View {
         }
     }
     
-    func deleteRecording(at offsets: IndexSet) {
+    private func deleteRecording(at offsets: IndexSet) {
         for index in offsets {
             modelContext.delete(recordings[index])
             try! modelContext.save()
         }
     }
-    
     
     private func stopRecording() {
         if let newRecording = audioRecorderManager.stopRecording() {
@@ -78,4 +87,3 @@ struct RecordingsView: View {
     RecordingsView()
         .modelContainer(for: Recording.self, inMemory: true)
 }
-
