@@ -11,9 +11,12 @@ struct RecordingLabelView: View {
     var recording: Recording
     var myLogger: MyLogger = MyLogger.shared
     var audioPlayerManager: AudioPlayerManager = AudioPlayerManager.shared
+    var transcriptionManager: TranscriptionManager = TranscriptionManager.shared
     var deleteAction: () -> Void = {}
     @State private var showTranscription: Bool = false
-    @State private var audioTranscription = "Lorem Iakshkjhcvbdjhsavckjdshvasj<zhv adjksv dsjashj dajbsdhjasbjdashbjahs"
+    @State private var audioTranscription = ""
+    @State private var transcriptionText: String? = nil
+    @State private var isLoadingTranscription = false
     
     var body: some View {
         HStack {
@@ -30,9 +33,10 @@ struct RecordingLabelView: View {
                         .padding(.bottom, 25)
                 }
                 if showTranscription {
-                    Text(audioTranscription)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
+                    transcriptionView
+                        .onAppear {
+                            loadTranscription()
+                        }
                 }
             }.padding(.vertical, 15)
             Spacer()
@@ -49,7 +53,7 @@ struct RecordingLabelView: View {
                 Label("Delete", systemImage: "trash")
             }
         }
-        .background(RoundedRectangle(cornerRadius: 20)
+        .background(RoundedRectangle(cornerRadius: 15)
             .foregroundStyle(.recordingLabelBackground))
     }
     
@@ -66,7 +70,9 @@ struct RecordingLabelView: View {
     
     private var speechTranscriptionButton: some View {
         Button(action: {
-            showTranscription.toggle()
+            withAnimation(.linear(duration: 0.2)) {
+                showTranscription.toggle()
+            }
         }) {
             Image(systemName: showTranscription ? "text.bubble.fill" : "text.bubble")
                 .font(.system(size: 26))
@@ -75,11 +81,51 @@ struct RecordingLabelView: View {
         }
     }
     
+    func loadTranscription() {
+        isLoadingTranscription = true
+        Task {
+            await transcriptionTask()
+            isLoadingTranscription = false
+        }
+    }
+    
+    private var transcriptionView: some View {
+        Group {
+            if isLoadingTranscription {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            } else if let transcriptionText = transcriptionText {
+                Text(transcriptionText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 15)
+            } else {
+                Text("Impossible to load the audio transcription")
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 15)
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+    
     private func pausePlaying() {
         audioPlayerManager.pausePlaying()
+    }
+    
+    private func transcriptionTask() async {
+        do {
+            transcriptionText = try await transcriptionManager.transcribeRecording(recording: recording)
+        } catch TranscriptionManager.TranscriptionError.serverError(let statusCode) {
+            print("Server error with status code: \(statusCode)")
+        } catch TranscriptionManager.TranscriptionError.networkError(let error) {
+            print("Network error: \(error.localizedDescription)")
+        } catch {
+            print("An unexpected error occurred: \(error.localizedDescription)")
+        }
     }
 }
 
 #Preview {
     RecordingLabelView(recording: Recording.emptyRecording)
 }
+
+

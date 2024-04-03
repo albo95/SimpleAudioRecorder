@@ -11,7 +11,6 @@ import AVFAudio
 import Foundation
 import AVFAudio
 
-// Use `final` if the class is not intended to be subclassed
 @Observable
 final class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     static let shared = AudioPlayerManager()

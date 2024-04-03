@@ -23,27 +23,38 @@ struct RecordingsView: View {
             ZStack {
                 if hasMicrophoneAccess {
                     VStack {
-                        ScrollView {
-                            ForEach(recordings, id: \.dateOfRecording) {
-                                recording in
-                                RecordingLabelView(recording: recording)
-                                    .padding(.vertical, 8)
-                            }.padding(.horizontal, 20)
+                        if recordings.isEmpty {
+                            Text("Tap the rec button to start recording").multilineTextAlignment(.center)
+                                .frame(width: 250)
+                                .foregroundStyle(.gray)
+                                .font(.system(size: 20))
+                        } else {
+                            ScrollView {
+                                ForEach(recordings, id: \.dateOfRecording) {
+                                    recording in
+                                    RecordingLabelView(recording: recording, deleteAction: {
+                                        deleteRecording(recording)
+                                    })
+                                        .padding(.vertical, 8)
+                                }.padding(.horizontal, 20)
+                                    .padding(.bottom, 140)
+                            }
                         }
                     }
                 } else {
-                    Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
+                    Text("Allow the access to your microphone to use the app").multilineTextAlignment(.center)
                         .frame(width: 250)
                         .foregroundStyle(.gray)
-                        .font(.system(size: 22))
+                        .font(.system(size: 20))
                 }
                 
                 ZStack {
                     VStack {
                         Spacer()
                         Rectangle()
-                            .foregroundStyle(.buttonBackground)
-                            .frame(height: 160)
+                            .foregroundStyle(.ultraThinMaterial)
+                            .frame(height: 125)
+                        
                     }.ignoresSafeArea()
                     VStack {
                         Spacer()
@@ -55,7 +66,7 @@ struct RecordingsView: View {
             }
             .navigationTitle("Recordings")
         }.onAppear {
-            audioRecorderManager.checkMicrophonePermission{ granted in
+            audioRecorderManager.checkMicrophonePermission { granted in
                 hasMicrophoneAccess = granted
             }
         }

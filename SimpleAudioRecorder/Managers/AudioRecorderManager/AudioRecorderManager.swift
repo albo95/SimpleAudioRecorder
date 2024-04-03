@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 
 @Observable
-class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
+final class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     public static var shared: AudioRecorderManager = AudioRecorderManager()
     override private init() {}
     private let audioSession: AVAudioSession = AVAudioSession.sharedInstance()

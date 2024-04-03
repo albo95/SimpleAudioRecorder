@@ -26,12 +26,9 @@ struct RecButtonView: View {
                         .font(.system(size: 30))
                         .foregroundStyle(.white)
                         .contentTransition(.symbolEffect(.replace))
+                        .frame(width: 44, height: 44)
                 }
             })
-            Text(isRecording ? "Stop" : "Rec")
-                .padding(.top, 5)
-                .foregroundStyle(.red)
-                .font(.system(size: 16))
         }
     }
 }

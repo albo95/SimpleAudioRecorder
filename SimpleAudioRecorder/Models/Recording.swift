@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-class Recording/*: Identifiable*/ {
-    //var id: UUID
+class Recording {
+
     var fileURL: URL?
     var name: String = ""
     var dateOfRecording: Date?
@@ -21,7 +21,6 @@ class Recording/*: Identifiable*/ {
     var audioData: Data?
     
     init(fileURL: URL, name: String? = "", dateOfRecording: Date? = nil, isPlaying: Bool = false, duration: TimeInterval = 0, elapsedTime: TimeInterval = 0, audioData: Data? = nil) {
-        //self.id = UUID()
         self.fileURL = fileURL
         self.name = (name == "" ? fileURL.lastPathComponent : name ?? "")
         self.dateOfRecording = dateOfRecording
