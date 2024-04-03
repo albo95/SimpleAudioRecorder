@@ -39,7 +39,9 @@ struct RecordingLabelView: View {
                 if showTranscription {
                     transcriptionView
                         .onAppear {
-                            loadTranscription()
+                            if transcriptionText == nil {
+                                loadTranscription()
+                            }
                         }
                 }
             }
