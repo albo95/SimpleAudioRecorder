@@ -11,7 +11,7 @@ import AVFoundation
 
 struct RecordingsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var recordings: [Recording]
+    @Query(sort: \Recording.dateOfRecording, order: .reverse) private var recordings: [Recording]
     @State private var isRecording: Bool = false
     var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
@@ -25,7 +25,8 @@ struct RecordingsView: View {
                 if hasMicrophoneAccess {
                     VStack {
                         if recordings.isEmpty {
-                            Text("Tap the rec button to start recording").multilineTextAlignment(.center)
+                            Text("Tap the rec button to start recording")
+                                .multilineTextAlignment(.center)
                                 .frame(width: 250)
                                 .foregroundStyle(.gray)
                                 .font(.system(size: 20))

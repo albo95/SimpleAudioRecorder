@@ -8,17 +8,11 @@ final class TranscriptionManager {
         get {
             UserDefaults.standard.string(forKey: "OpenAI_APIKey") ?? ""
         }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "OpenAI_APIKey")
-            NotificationCenter.default.post(name: .didChangeOpenAIKey, object: nil)
-        }
     }
     
     private let session = URLSession.shared
     
-    private init() {
-        self.registerForOpenAIKeyChanges()
-    }
+    private init() { }
     
     enum TranscriptionError: Error {
         case invalidURL
@@ -28,7 +22,8 @@ final class TranscriptionManager {
         case dataError
     }
     
-    func transcribeRecording(recording: Recording) async throws -> String {
+    @MainActor
+    func transcribeRecording(_ recording: Recording) async throws -> String? {
         guard let audioData = recording.audioData else {
             throw TranscriptionError.dataError
         }
@@ -75,32 +70,6 @@ final class TranscriptionManager {
         body.appendString("--\(boundary)--\r\n")
         
         return body
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func registerForOpenAIKeyChanges() {
-        NotificationCenter.default.addObserver(self, selector: #selector(openAIKeyChanged), name: .didChangeOpenAIKey, object: nil)
-    }
-    
-    @objc private func openAIKeyChanged() {
-        // Handle the OpenAI key change if needed, e.g., invalidate sessions or caches.
-    }
-}
-
-
-extension Notification.Name {
-    static let didChangeOpenAIKey = Notification.Name("didChangeOpenAIKey")
-}
-
-
-private extension Data {
-    mutating func appendString(_ string: String) {
-        if let data = string.data(using: .utf8) {
-            append(data)
-        }
     }
 }
 

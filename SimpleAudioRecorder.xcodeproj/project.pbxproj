@@ -19,6 +19,7 @@
 		62801D022B80AC6000BCA9E4 /* NetworkMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62801D012B80AC6000BCA9E4 /* NetworkMonitorView.swift */; };
 		62801D052B80AD6500BCA9E4 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62801D042B80AD6500BCA9E4 /* NetworkMonitor.swift */; };
 		62914AF42BBDECE300258D70 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62914AF32BBDECE300258D70 /* SettingsView.swift */; };
+		62914AF62BBDFC6700258D70 /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62914AF52BBDFC6700258D70 /* DataExtension.swift */; };
 		62E4824A2BBD9FAC005162D7 /* TranscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E482492BBD9FAC005162D7 /* TranscriptionManager.swift */; };
 		62E4F6462B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4F6452B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift */; };
 		62E4F6482B5BDAB3001F1FC9 /* RecordingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E4F6472B5BDAB3001F1FC9 /* RecordingsView.swift */; };
@@ -42,6 +43,7 @@
 		62801D012B80AC6000BCA9E4 /* NetworkMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorView.swift; sourceTree = "<group>"; };
 		62801D042B80AD6500BCA9E4 /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		62914AF32BBDECE300258D70 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		62914AF52BBDFC6700258D70 /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		62E482492BBD9FAC005162D7 /* TranscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionManager.swift; sourceTree = "<group>"; };
 		62E4F6422B5BDAB3001F1FC9 /* SimpleAudioRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleAudioRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E4F6452B5BDAB3001F1FC9 /* SimpleAudioRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAudioRecorderApp.swift; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				62E4F65B2B603D71001F1FC9 /* DateExtension.swift */,
+				62914AF52BBDFC6700258D70 /* DataExtension.swift */,
 				620CDE232B6157CD0005F03E /* TimeIntervalExtension.swift */,
 				627D7CC62B7E7FAA0043D550 /* URLExtension.swift */,
 			);
@@ -271,6 +274,7 @@
 				6272356C2B63BEF50055E0CB /* AudioPlayerManager.swift in Sources */,
 				62E4F65A2B602C5B001F1FC9 /* Recording.swift in Sources */,
 				620CDE202B614C4B0005F03E /* RecordingLabelView.swift in Sources */,
+				62914AF62BBDFC6700258D70 /* DataExtension.swift in Sources */,
 				627D7CC42B77AD670043D550 /* MyLoggerView.swift in Sources */,
 				62801D052B80AD6500BCA9E4 /* NetworkMonitor.swift in Sources */,
 				627D7CC72B7E7FAA0043D550 /* URLExtension.swift in Sources */,

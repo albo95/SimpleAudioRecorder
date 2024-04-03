@@ -16,24 +16,25 @@ struct RecordingLabelView: View {
     @State private var showTranscription: Bool = false
     @State private var audioTranscription = ""
     @State private var transcriptionText: String? = nil
+    @State private var errorMessage: String = ""
     @State private var isLoadingTranscription = false
     
     var body: some View {
         HStack {
             Spacer()
             VStack {
-                    Text(recording.name)
-                        .font(.system(size: 16))
-                        .padding(.top, 20)
-                    HStack(spacing: 20) {
-                        playButton
-                            .padding(.bottom, 25)
-                            .padding(.trailing, 10)
-                        RecordingSlider(recording)
-                        speechTranscriptionButton
-                            .padding(.bottom, 25)
-                    }.padding(.bottom, 20)
-
+                Text(recording.name)
+                    .font(.system(size: 16))
+                    .padding(.top, 20)
+                HStack(spacing: 20) {
+                    playButton
+                        .padding(.bottom, 25)
+                        .padding(.trailing, 10)
+                    RecordingSlider(recording)
+                    speechTranscriptionButton
+                        .padding(.bottom, 25)
+                }.padding(.bottom, 20)
+                
                 
                 if showTranscription {
                     transcriptionView
@@ -47,6 +48,14 @@ struct RecordingLabelView: View {
             if let url = recording.fileURL {
                 ShareLink(item: url) {
                     Label("Share", systemImage: "square.and.arrow.up")
+                }
+            }
+            
+            if let transcriptionText = transcriptionText, !transcriptionText.isEmpty {
+                Button(action: {
+                    UIPasteboard.general.string = transcriptionText
+                }) {
+                    Label("Copy Text", systemImage: "doc.on.doc")
                 }
             }
             
@@ -87,7 +96,20 @@ struct RecordingLabelView: View {
     func loadTranscription() {
         isLoadingTranscription = true
         Task {
-            await transcriptionTask()
+            do {
+                if let result = try await transcriptionManager.transcribeRecording(recording) {
+                    transcriptionText = result
+                }
+            } catch TranscriptionManager.TranscriptionError.serverError(let statusCode) {
+                errorMessage = "Server error with status code: \(statusCode)\n\nImpossible to load the audio transcription, check the OpenAI APIKey in the settings"
+                print(errorMessage)
+            } catch TranscriptionManager.TranscriptionError.networkError(let error) {
+                errorMessage = "Network error: \(error.localizedDescription)\n\nCheck your internet connection"
+                print(errorMessage)
+            } catch {
+                errorMessage = "An unexpected error occurred: \(error.localizedDescription)\n"
+                print(errorMessage)
+            }
             isLoadingTranscription = false
         }
     }
@@ -97,31 +119,19 @@ struct RecordingLabelView: View {
             if isLoadingTranscription {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
+                    .padding(.bottom, 20)
             } else if let transcriptionText = transcriptionText {
                 Text(transcriptionText)
             } else {
-                Text("Impossible to load the audio transcription, check the OpenAI APIKey in the settings")
+                Text("\(errorMessage)\n")
                     .multilineTextAlignment(.center)
             }
         } .padding(.horizontal, 20)
-            .padding(.bottom, 30)
+            .padding(.bottom, 10)
     }
     
     private func pausePlaying() {
         audioPlayerManager.pausePlaying()
-    }
-    
-    @MainActor
-    private func transcriptionTask() async {
-        do {
-            transcriptionText = try await transcriptionManager.transcribeRecording(recording: recording)
-        } catch TranscriptionManager.TranscriptionError.serverError(let statusCode) {
-            print("Server error with status code: \(statusCode)")
-        } catch TranscriptionManager.TranscriptionError.networkError(let error) {
-            print("Network error: \(error.localizedDescription)")
-        } catch {
-            print("An unexpected error occurred: \(error.localizedDescription)")
-        }
     }
 }
 

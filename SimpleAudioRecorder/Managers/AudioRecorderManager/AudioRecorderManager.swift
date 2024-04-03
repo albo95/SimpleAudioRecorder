@@ -18,7 +18,7 @@ final class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private var newRecording: Recording?
     
     private var logger: MyLogger = MyLogger.shared
-
+    
     func startRecording() {
         do {
             try setUpAudioSession()
@@ -47,7 +47,6 @@ final class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
             newRecording.duration = duration
             audioRecorder?.stop()
             newRecording.audioData = try? Data(contentsOf: fileURL)
-            //recordingsDataManager.addToRecordings(newRecording)
             self.newRecording = nil
             return newRecording
         } else {

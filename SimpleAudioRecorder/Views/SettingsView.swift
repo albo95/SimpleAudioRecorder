@@ -12,7 +12,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @State private var apiKey: String = UserDefaults.standard.string(forKey: "OpenAI_APIKey") ?? ""
-
+    
     var body: some View {
         NavigationView {
             Form {
