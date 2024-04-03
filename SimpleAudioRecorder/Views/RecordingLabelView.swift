@@ -55,7 +55,7 @@ struct RecordingLabelView: View {
                 Button(action: {
                     UIPasteboard.general.string = transcriptionText
                 }) {
-                    Label("Copy Text", systemImage: "doc.on.doc")
+                    Label("Copy Transcription", systemImage: "doc.on.doc")
                 }
             }
             
