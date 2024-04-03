@@ -38,9 +38,11 @@ struct RecordingsView: View {
                                         deleteRecording(recording)
                                     })
                                     .padding(.vertical, 8)
-                                }.padding(.horizontal, 20)
-                                    .padding(.bottom, 140)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 125)
                             }
+                            .scrollIndicators(.hidden)
                         }
                     }
                 } else {
@@ -86,9 +88,8 @@ struct RecordingsView: View {
         }
     }
     
-    private func deleteRecording(_ recording: Recording) {
-        modelContext.delete(recording)
-        try! modelContext.save()
+    private func startRecording() {
+        audioRecorderManager.startRecording()
     }
     
     private func stopRecording() {
@@ -96,14 +97,15 @@ struct RecordingsView: View {
             saveRecording(newRecording)
         }
     }
-    
+
     private func saveRecording(_ newRecording: Recording) {
         modelContext.insert(newRecording)
         try! modelContext.save()
     }
     
-    private func startRecording() {
-        audioRecorderManager.startRecording()
+    private func deleteRecording(_ recording: Recording) {
+        modelContext.delete(recording)
+        try! modelContext.save()
     }
 }
 
