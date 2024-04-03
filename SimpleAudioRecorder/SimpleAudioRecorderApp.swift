@@ -28,7 +28,7 @@ struct SimpleAudioRecorderApp: App {
         WindowGroup {
             ZStack {
                 RecordingsView()
-                MyLoggerView()
+                //MyLoggerView()
                 NetworkMonitorView()
             }
         }

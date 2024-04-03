@@ -22,23 +22,26 @@ struct RecordingLabelView: View {
         HStack {
             Spacer()
             VStack {
-                Text(recording.name)
-                    .font(.system(size: 16))
-                HStack(spacing: 20) {
-                    playButton
-                        .padding(.bottom, 25)
-                        .padding(.trailing, 10)
-                    RecordingSlider(recording)
-                    speechTranscriptionButton
-                        .padding(.bottom, 25)
-                }
+                    Text(recording.name)
+                        .font(.system(size: 16))
+                        .padding(.top, 20)
+                    HStack(spacing: 20) {
+                        playButton
+                            .padding(.bottom, 25)
+                            .padding(.trailing, 10)
+                        RecordingSlider(recording)
+                        speechTranscriptionButton
+                            .padding(.bottom, 25)
+                    }.padding(.bottom, 20)
+
+                
                 if showTranscription {
                     transcriptionView
                         .onAppear {
                             loadTranscription()
                         }
                 }
-            }.padding(.vertical, 15)
+            }
             Spacer()
         }.contextMenu {
             if let url = recording.fileURL {
@@ -96,21 +99,19 @@ struct RecordingLabelView: View {
                     .progressViewStyle(CircularProgressViewStyle())
             } else if let transcriptionText = transcriptionText {
                 Text(transcriptionText)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 15)
             } else {
-                Text("Impossible to load the audio transcription")
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 15)
+                Text("Impossible to load the audio transcription, check the OpenAI APIKey in the settings")
                     .multilineTextAlignment(.center)
             }
-        }
+        } .padding(.horizontal, 20)
+            .padding(.bottom, 30)
     }
     
     private func pausePlaying() {
         audioPlayerManager.pausePlaying()
     }
     
+    @MainActor
     private func transcriptionTask() async {
         do {
             transcriptionText = try await transcriptionManager.transcribeRecording(recording: recording)

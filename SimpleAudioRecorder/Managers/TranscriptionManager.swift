@@ -4,10 +4,21 @@ import Foundation
 final class TranscriptionManager {
     static let shared = TranscriptionManager()
     
-    private let openAIKey = ""
+    var openAIKey: String {
+        get {
+            UserDefaults.standard.string(forKey: "OpenAI_APIKey") ?? ""
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "OpenAI_APIKey")
+            NotificationCenter.default.post(name: .didChangeOpenAIKey, object: nil)
+        }
+    }
+    
     private let session = URLSession.shared
     
-    private init() {}
+    private init() {
+        self.registerForOpenAIKeyChanges()
+    }
     
     enum TranscriptionError: Error {
         case invalidURL
@@ -65,7 +76,25 @@ final class TranscriptionManager {
         
         return body
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func registerForOpenAIKeyChanges() {
+        NotificationCenter.default.addObserver(self, selector: #selector(openAIKeyChanged), name: .didChangeOpenAIKey, object: nil)
+    }
+    
+    @objc private func openAIKeyChanged() {
+        // Handle the OpenAI key change if needed, e.g., invalidate sessions or caches.
+    }
 }
+
+
+extension Notification.Name {
+    static let didChangeOpenAIKey = Notification.Name("didChangeOpenAIKey")
+}
+
 
 private extension Data {
     mutating func appendString(_ string: String) {

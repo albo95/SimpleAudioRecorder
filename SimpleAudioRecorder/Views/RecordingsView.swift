@@ -15,6 +15,7 @@ struct RecordingsView: View {
     @State private var isRecording: Bool = false
     var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
+    @State private var showingSettings = false
     @State private var isPlaying: [Bool] = []
     private var logger: MyLogger = MyLogger.shared
     
@@ -35,7 +36,7 @@ struct RecordingsView: View {
                                     RecordingLabelView(recording: recording, deleteAction: {
                                         deleteRecording(recording)
                                     })
-                                        .padding(.vertical, 8)
+                                    .padding(.vertical, 8)
                                 }.padding(.horizontal, 20)
                                     .padding(.bottom, 140)
                             }
@@ -65,6 +66,18 @@ struct RecordingsView: View {
                 }
             }
             .navigationTitle("Recordings")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingSettings = true
+                    }) {
+                        Image(systemName: "gear")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+            }
         }.onAppear {
             audioRecorderManager.checkMicrophonePermission { granted in
                 hasMicrophoneAccess = granted
