@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 
 @Observable
-class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
+final class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     public static var shared: AudioRecorderManager = AudioRecorderManager()
     override private init() {}
     private let audioSession: AVAudioSession = AVAudioSession.sharedInstance()
@@ -18,7 +18,7 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
     private var newRecording: Recording?
     
     private var logger: MyLogger = MyLogger.shared
-
+    
     func startRecording() {
         do {
             try setUpAudioSession()
@@ -47,7 +47,6 @@ class AudioRecorderManager: NSObject, AVAudioPlayerDelegate {
             newRecording.duration = duration
             audioRecorder?.stop()
             newRecording.audioData = try? Data(contentsOf: fileURL)
-            //recordingsDataManager.addToRecordings(newRecording)
             self.newRecording = nil
             return newRecording
         } else {

@@ -15,7 +15,7 @@ class NetworkMonitor {
     private let networkMonitor = NWPathMonitor()
     private let workerQueue = DispatchQueue(label: "Monitor")
     var isConnected = false
-
+    
     init() {
         networkMonitor.pathUpdateHandler = { [weak self] path in
             if path.status != .satisfied {

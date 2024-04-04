@@ -11,10 +11,11 @@ import AVFoundation
 
 struct RecordingsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var recordings: [Recording]
+    @Query(sort: \Recording.dateOfRecording, order: .reverse) private var recordings: [Recording]
     @State private var isRecording: Bool = false
     var audioRecorderManager: AudioRecorderManager = AudioRecorderManager.shared
     @State private var hasMicrophoneAccess = false
+    @State private var showingSettings = false
     @State private var isPlaying: [Bool] = []
     private var logger: MyLogger = MyLogger.shared
     
@@ -22,27 +23,42 @@ struct RecordingsView: View {
         NavigationStack {
             ZStack {
                 if hasMicrophoneAccess {
-                    List{
-                        ForEach(recordings, id: \.dateOfRecording) {
-                            recording in
-                            RecordingLabelView(recording: recording)
-                                .padding(.vertical, 8)
+                    VStack {
+                        if recordings.isEmpty {
+                            Text("Tap the rec button to start recording")
+                                .multilineTextAlignment(.center)
+                                .frame(width: 250)
+                                .foregroundStyle(.gray)
+                                .font(.system(size: 20))
+                        } else {
+                            ScrollView {
+                                ForEach(recordings, id: \.dateOfRecording) {
+                                    recording in
+                                    RecordingLabelView(recording: recording, deleteAction: {
+                                        deleteRecording(recording)
+                                    })
+                                    .padding(.vertical, 8)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 125)
+                            }
+                            .scrollIndicators(.hidden)
                         }
-                        .onDelete(perform: deleteRecording)
                     }
                 } else {
-                    Text("Allow the access to your microphone to use the app.").multilineTextAlignment(.center)
+                    Text("Allow the access to your microphone to use the app").multilineTextAlignment(.center)
                         .frame(width: 250)
                         .foregroundStyle(.gray)
-                        .font(.system(size: 22))
+                        .font(.system(size: 20))
                 }
                 
                 ZStack {
                     VStack {
                         Spacer()
                         Rectangle()
-                            .foregroundStyle(.buttonBackground)
-                            .frame(height: 160)
+                            .foregroundStyle(.ultraThinMaterial)
+                            .frame(height: 125)
+                        
                     }.ignoresSafeArea()
                     VStack {
                         Spacer()
@@ -53,18 +69,27 @@ struct RecordingsView: View {
                 }
             }
             .navigationTitle("Recordings")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingSettings = true
+                    }) {
+                        Image(systemName: "gear")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+            }
         }.onAppear {
-            audioRecorderManager.checkMicrophonePermission{ granted in
+            audioRecorderManager.checkMicrophonePermission { granted in
                 hasMicrophoneAccess = granted
             }
         }
     }
     
-    private func deleteRecording(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(recordings[index])
-            try! modelContext.save()
-        }
+    private func startRecording() {
+        audioRecorderManager.startRecording()
     }
     
     private func stopRecording() {
@@ -72,14 +97,15 @@ struct RecordingsView: View {
             saveRecording(newRecording)
         }
     }
-    
+
     private func saveRecording(_ newRecording: Recording) {
         modelContext.insert(newRecording)
         try! modelContext.save()
     }
     
-    private func startRecording() {
-        audioRecorderManager.startRecording()
+    private func deleteRecording(_ recording: Recording) {
+        modelContext.delete(recording)
+        try! modelContext.save()
     }
 }
 

@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 class Recording {
+
     var fileURL: URL?
     var name: String = ""
     var dateOfRecording: Date?
